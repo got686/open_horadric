@@ -1,0 +1,12 @@
+{% extends "base.jinja2" %}
+{% block collect_all %}
+    {% for message in messages.values() %}
+{{- all.append(message.name) or '' -}}
+    {% endfor %}
+    {% for enum in enums.values() %}
+{{- all.append(enum.name) or '' -}}
+    {% endfor %}
+{% endblock %}
+
+{% block code %}
+{% endblock %}

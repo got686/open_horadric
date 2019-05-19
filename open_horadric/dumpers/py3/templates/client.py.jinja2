@@ -1,0 +1,58 @@
+{% extends 'base.jinja2' %}
+
+{% macro render_service(service) %}
+class {{ service.class_name }}(BaseClient):
+    __slots__ = (
+    {% for method in service.methods.values() %}
+        '_{{ to_snake_case(method.name) }}',
+    {% endfor %}
+    )
+
+    logger = logging.getLogger('{{ service.full_name }}')
+
+    def __init__(self, channel, credentials=None):
+        super().__init__(channel=channel, credentials=credentials)
+        {% for method in service.methods.values() %}
+
+        self._{{ to_snake_case(method.name) }} = self.channel.{{ method.handler_name_string }}(
+            '/{{ service.grpc_path_string }}/{{ method.name }}',
+            request_serializer={{ method.input_string }}.SerializeToString,
+            response_deserializer={{ method.output_string }}.FromString,
+        )
+        {% endfor %}
+
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__, self.channel)
+
+    __str__ = __repr__
+    {% for method in service.methods.values() %}
+
+    def {{ to_snake_case(method.name) }}(
+            self,
+            request: {{ method.input_type_string }} = None,
+            timeout: float = None,
+            metadata: List[str] = None,
+            credentials: Any = None,
+    ) -> {{ method.output_type_string }}:
+        return self._{{ to_snake_case(method.name) }}(
+            request=request if request is not None else google.protobuf.empty_pb2.Empty(),
+            timeout=timeout,
+            metadata=metadata,
+            credentials=credentials,
+        )
+    {% endfor %}
+{% endmacro %}
+
+{% block collect_all %}
+    {% for service in services.values() %}
+{{- all.append(service.class_name) or '' -}}
+    {% endfor %}
+{% endblock %}
+
+{% block code %}
+{% for service in services.values() %}
+
+
+{{ render_service(service) }}
+{% endfor %}
+{% endblock %}

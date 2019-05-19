@@ -1,0 +1,6 @@
+dev
+*.log
+debug_data_dump
+.idea
+.DS_STORE
+*.pyc

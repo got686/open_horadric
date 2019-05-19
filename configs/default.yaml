@@ -1,0 +1,18 @@
+protoc_path: protoc
+protoc_version: 3.9.1
+proto_dir: proto
+output_dir: generated
+project_name: default
+
+pipelines:
+  py3:
+    root_suffix: py3
+  proxy:
+    root_suffix: proxy
+    dumpers:
+      proxy:
+        cors: '*'
+  model:
+    root_suffix: model
+  typescript:
+    root_suffix: ts

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package foo.bar;
+
+
+import "google/protobuf/empty.proto";
+
+message TestMessage {
+    message TestNestedMessage {
+        string bar = 1;
+    }
+    enum TestNestedEnum {
+        DEFAULT = 0;
+    }
+    double double = 1;
+    float float = 2;
+    int64 int64 = 3;
+    uint64 uint64 = 4;
+    int32 int32 = 5;
+    fixed64 fixed64 = 6;
+    fixed32 fixed32 = 7;
+    bool bool = 8;
+    string string = 9;
+//    GROUP = 10;
+    TestNestedMessage test_nested_message = 11;
+    bytes bytes = 12;
+    uint32 uint32 = 13;
+    TestNestedEnum test_nested_enum = 14;
+    sfixed32 sfixed32 = 15;
+    sfixed64 sfixed64 = 16;
+    sint32 sint32 = 17;
+    sint64 sint64 = 18;
+    // maps and lists
+    map<int64, TestNestedMessage> pbt_message_map = 19;
+
+}
+
+enum TestEnum {
+    DEFAULT = 0;
+}
+
+service TestService {
+    rpc TestMethod (TestMessage) returns (TestMessage.TestNestedMessage);
+    rpc ClientStreaming (stream TestMessage) returns (TestMessage.TestNestedMessage);
+    rpc ServerStreaming  (TestMessage) returns (stream TestMessage.TestNestedMessage);
+    rpc ClientServerStreaming  (stream TestMessage.TestNestedMessage) returns (stream TestMessage.TestNestedMessage);
+    rpc EmptyMethod  (google.protobuf.Empty) returns (google.protobuf.Empty);
+}

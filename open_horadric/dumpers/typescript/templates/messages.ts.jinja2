@@ -1,0 +1,71 @@
+{% extends "base.ts.jinja2" %}
+
+{% macro render_enum(enum) %}
+{% if enum.in_root %}export {% endif %}enum {{ enum.root_class_name }} {
+    {% for value in enum.values.values() %}
+    {{ value.name }} = '{{ value.name }}',
+    {% endfor %}
+}
+{% endmacro %}
+
+{% macro render_message(message) %}
+{% for nested_message in message.messages.values() %}
+{{ render_message(nested_message) }}
+{% endfor %}
+{% for enum in message.enums.values() %}
+{{ render_enum(enum) }}
+{% endfor %}
+
+{% if message.in_root %}export {% endif %}class {{ message.root_class_name }} implements interfaces.{{ message.interface.root_class_name }} {
+    {% for nested_message in message.messages.values() %}
+    public static {{ nested_message.class_name }} = {{ nested_message.root_class_name }}
+    {% endfor %}
+    {% for enum in message.enums.values() %}
+    public static {{ enum.class_name }} = {{ enum.root_class_name }}
+    {% endfor %}
+    {% for field in message.fields.values() %}
+    {{ field.name_sting }}: {{ field.type_name_string }}
+    {% endfor %}
+
+    public constructor (
+        {% for field in message.fields.values() %}
+            {{ field.name_sting }}: {{ field.type_name_string }} = {{ field.default_value_string }},
+        {% endfor %}
+    ) {
+        {% for field in message.fields.values() %}
+        this.{{ field.name_sting }} = {{ field.name_sting }}
+        {% endfor %}
+    }
+
+    public static FromData(data: interfaces.{{ message.data_root_class_name }}): {{ message.root_class_name }} {
+        if (data === undefined) {
+            return new {{ message.root_class_name }}()
+        }
+
+    {% for field in message.fields.values() %}
+        {% if field.container_type == field.ContainerType.MAP and field.type == field.type.MESSAGE %}
+        const {{ field.name_sting }} = {}
+        Object.keys(data.{{ field.name_sting }}).forEach(
+            key => {{ field.name_sting }}[key] = {{ field._get_message_type_name() }}.FromData(data.{{ field.name_sting }}[key])
+        )
+
+        {% endif %}
+    {% endfor %}
+        return new {{ message.root_class_name }}(
+            {% for field in message.fields.values() %}
+            {{ field.data_get_value_string }},
+            {% endfor %}
+        )
+    }
+}
+{% endmacro %}
+
+
+{% block code %}
+{% for enum in enums.values() %}
+{{ render_enum(enum) }}
+{% endfor %}
+{% for message in messages.values() %}
+{{ render_message(message) }}
+{% endfor %}
+{% endblock %}

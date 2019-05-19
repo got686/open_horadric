@@ -1,0 +1,72 @@
+{% extends "messages.py.jinja2" %}
+
+{% macro render_enum(enum) %}
+class {{ enum.name }}:
+    {% for value in enum.values.values() %}
+    {{ value.name }} = {{ value.index }}
+    {% endfor %}
+
+    @classmethod
+    def Name(cls, number: int) -> str: ...
+    @classmethod
+    def Value(cls, name: str) -> int: ...
+    @classmethod
+    def keys(cls) -> List[str]: ...
+    @classmethod
+    def values(cls) -> List[int]: ...
+    @classmethod
+    def items(cls) -> List[Tuple[str, int]]: ...
+{% endmacro %}
+
+{% macro render_message(message) %}
+class {{ message.name }}({{ message.parents_sting }}):
+    {% for nested_message in message.messages.values() %}
+        {% if not loop.first %}
+
+
+        {% endif %}
+    {{ render_message(nested_message) | indent(4) -}}
+    {% endfor %}
+    {% for enum in message.enums.values() %}
+        {% if not loop.first or message.messages %}
+
+
+        {% endif %}
+    {{ render_enum(enum) | indent(4) -}}
+    {% endfor %}
+    {% if message.messages or message.enums %}
+
+    {% endif %}
+    def __init__(
+            self,
+{%+ if message.fields %}{{ '            *,\n' }}{% endif %}
+    {% for field in message.fields.values() %}
+            {{ field.name }}: {{ field.init_type_string }} = {{ field.default_value_string }},
+    {% endfor %}
+    ) -> None: ...
+    {% if message.fields %}{{ '\n' }}{% endif %}
+    {% for field in message.fields.values() %}
+    {{ field.name }}: {{ field.type_string }}
+    {% endfor %}
+
+    @classmethod
+    def FromString(cls, s: bytes) -> {{ message.no_package_type_string }}: ...
+    def MergeFrom(self, other_msg: Message) -> None: ...
+    def CopyFrom(self, other_msg: Message) -> None: ...
+    def HasField(self, field_name: str) -> bool: ...
+    def ClearField(self, field_name: str) -> None: ...
+    def WhichOneof(self, oneof_group: str) -> str: ...
+{% endmacro %}
+
+{% block code %}
+    {% for message in messages.values() %}
+
+
+{{ render_message(message) -}}
+    {% endfor %}
+    {% for enum in enums.values() %}
+
+
+{{ render_enum(enum) -}}
+    {% endfor %}
+{% endblock %}

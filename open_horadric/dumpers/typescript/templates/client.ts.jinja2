@@ -1,0 +1,25 @@
+{% extends "base.ts.jinja2" %}
+
+{% macro render_service(service) %}
+
+export class {{ service.class_name }} {
+    public httpClient: AxiosInstance
+
+    public constructor(httpClient: AxiosInstance) {
+        this.httpClient = httpClient
+    }
+    {% for method in service.methods.values() %}
+
+    public {{ method.name_string }}(request: {{ method.input_interface_string }}): Promise<{{ method.output_interface_string }}> {
+        return this.httpClient.post('/{{ service.grpc_path_string }}/{{ method.name }}', request)
+            .then((response: AxiosResponse) => {{ method.output_type_string }}.FromData(response.data))
+    }
+    {% endfor %}
+}
+{% endmacro %}
+
+{% block code %}
+{% for service in services.values() %}
+{{ render_service(service) }}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.ts.jinja2" %}
+
+{% macro render_interface(message) %}
+{% for nested_message in message.messages.values() %}
+{{ render_interface(nested_message) }}
+{% endfor %}
+
+export interface {{ message.root_class_name }} {
+    {% for field in message.fields.values() %}
+    {{ field.name_sting }}: {{ field.type_name_string }},
+    {% endfor %}
+}
+
+export interface {{ message.data_root_class_name }} {
+    {% for field in message.fields.values() %}
+    {{ field.name_sting }}: {{ field.data_type_name_string }},
+    {% endfor %}
+}{% endmacro %}
+
+
+{% block code %}
+{% for message in messages.values() %}
+{{ render_interface(message) }}
+{% endfor %}
+{% endblock %}

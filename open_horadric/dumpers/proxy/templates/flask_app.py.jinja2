@@ -1,0 +1,19 @@
+{% extends 'base.jinja2' %}
+
+{% block code %}
+
+app = ProxyApplication('py3_proxy')
+cors = CORS(app, resources={r"/*": {"origins": "{{cors}}"}})
+channel = grpc.insecure_channel('localhost:50051')
+{% for service in services.values() %}
+
+{{ service.full_class_name }}(
+    client={{ service.client.full_class_name }}(channel=channel),
+    middlewares=[ProtocolConverterMiddleware()]
+).bind(app=app)
+{% endfor %}
+
+
+if __name__ == '__main__':
+    app.run(host="127.0.0.1", port=8080)
+{% endblock %}
