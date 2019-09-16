@@ -28,7 +28,7 @@ class Py3Client(Service):
 
         @property
         def output_string(self) -> str:
-            if in_same_package(self, self.input_obj, exclude_root=True):
+            if in_same_package(self, self.output_obj, exclude_root=True):
                 return render_path(self.output_obj.full_namespace.other)
             else:
                 return render_path(self.output_obj.full_namespace)

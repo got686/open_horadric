@@ -44,8 +44,6 @@ def run_plugin(func):
     with open("debug_data_dump", "wb+") as f:
         f.write(data)
 
-    # config = get_config(use_tmp=True)
-
     plugin_request = plugin_pb2.CodeGeneratorRequest()
     plugin_request.ParseFromString(data)
     plugin_response = func(plugin_request)

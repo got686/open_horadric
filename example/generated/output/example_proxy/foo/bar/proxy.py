@@ -8,10 +8,10 @@ from typing import List
 import logging
 
 from flask import request as flask_request
-from horadric_lib.proxy.decorator.signature_types import signature_types
-from horadric_lib.proxy.middleware.base import apply_middlewares
-from horadric_lib.proxy.middleware.base import BaseProxyMiddleware
-from horadric_lib.proxy.proxy import BaseProxy
+from open_horadric_lib.proxy.decorator.signature_types import signature_types
+from open_horadric_lib.proxy.middleware.base import apply_middlewares
+from open_horadric_lib.proxy.middleware.base import BaseProxyMiddleware
+from open_horadric_lib.proxy.proxy import BaseProxy
 import flask
 
 from example_py3.foo.bar.client import TestServiceClient

@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
 
-from open_horadric.config import Config
+from open_horadric.config.config import Config
 from open_horadric.converters.root_folder.converter import RootFolderConverter
 from open_horadric.pipelines.base_pipelines.py3.client import py3_client_subtree
 from open_horadric.pipelines.base_pipelines.py3.message import py3_messages_subtree

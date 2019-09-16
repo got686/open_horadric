@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
 
-from open_horadric.config import Config
+from open_horadric.config.config import Config
 from open_horadric.converters.root_folder.converter import RootFolderConverter
 from open_horadric.dumpers.typescript.indexes_dumper import TypescriptIndexesDumper
 from open_horadric.pipelines.base_pipelines.typescript.clients import typescript_clients_subtree

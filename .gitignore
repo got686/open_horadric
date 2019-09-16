@@ -4,3 +4,5 @@ debug_data_dump
 .idea
 .DS_STORE
 *.pyc
+dist
+open_horadric.egg-info

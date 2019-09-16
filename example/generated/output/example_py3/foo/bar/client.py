@@ -9,7 +9,7 @@ from typing import Iterable
 from typing import List
 import logging
 
-from horadric_lib.client.client import BaseClient
+from open_horadric_lib.client.client import BaseClient
 import google.protobuf.empty_pb2
 
 from example_py3.foo.bar.messages import TestMessage

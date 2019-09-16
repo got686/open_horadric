@@ -7,14 +7,16 @@ from typing import Dict
 import yaml
 from open_horadric_lib.base.singleton import SingletonMeta
 
+CURRENT_DIR = os.path.dirname(__file__)
+
 
 class Config(metaclass=SingletonMeta):
     def __init__(self):
-        default_config_path = "configs/default.yaml"
+        default_config_path = os.path.join(CURRENT_DIR, "default.yaml")
         with open(default_config_path) as f:
             config = yaml.load(f, Loader=yaml.FullLoader)
 
-        config_path = os.environ.get("CONFIG", "config.yaml")
+        config_path = os.environ.get("CONFIG", "open_horadric_config.yaml")
         with open(config_path) as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
 
