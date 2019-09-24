@@ -28,3 +28,4 @@ class Config(metaclass=SingletonMeta):
         self.output_dir: str = config["output_dir"]
         self.project_name: str = config["project_name"]
         self.pipelines: Dict[str, Dict[str, Any]] = config["pipelines"]
+        self.debug: bool = config["debug"]
