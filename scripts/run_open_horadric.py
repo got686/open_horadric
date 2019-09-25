@@ -57,6 +57,11 @@ def main():
     logger.info("Run compile command: %s", " ".join(cmd))
     subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
+    for command in config.run_after:
+        logger.info("Run command: %s", command)
+        subprocess.check_call(["bash", "-c", command], stdout=sys.stdout, stderr=sys.stderr)
+        logger.info("End running command: %s", command)
+
 
 if __name__ == "__main__":
     main()

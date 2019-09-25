@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Any
 from typing import Dict
+from typing import List
 
 import yaml
 from open_horadric_lib.base.singleton import SingletonMeta
@@ -29,3 +30,6 @@ class Config(metaclass=SingletonMeta):
         self.project_name: str = config["project_name"]
         self.pipelines: Dict[str, Dict[str, Any]] = config["pipelines"]
         self.debug: bool = config["debug"]
+        self.version: str = config["version"]
+        self.license: str = config["license"]
+        self.run_after: List[str] = config["run_after"]
