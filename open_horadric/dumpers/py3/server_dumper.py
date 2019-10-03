@@ -33,6 +33,20 @@ class Py3ServerDumper(Py3ClientDumper):
         imports.add_import(
             Import(type_=Import.Type.LIBRARY, import_name="RpcContext", import_from="grpc.framework.interfaces.face.face")
         )
+        imports.add_import(
+            Import(
+                type_=Import.Type.LIBRARY,
+                import_name="apply_middlewares",
+                import_from="open_horadric_lib.server.middleware.base",
+            )
+        )
+        imports.add_import(
+            Import(
+                type_=Import.Type.LIBRARY,
+                import_name="BaseServerInterface",
+                import_from="open_horadric_lib.server.base_interface",
+            )
+        )
 
         self.add_services_imports(imports=imports, package=package)
         self.add_streaming_imports(imports=imports, package=package)

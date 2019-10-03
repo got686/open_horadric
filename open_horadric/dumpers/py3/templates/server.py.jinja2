@@ -3,7 +3,7 @@
 {% macro render_service(service) %}
 
 
-class {{ service.class_name }}:
+class {{ service.class_name }}(BaseServerInterface):
     {% for method in service.methods.values() %}
         {% if not loop.first %}
 
@@ -21,7 +21,7 @@ class {{ service.class_name }}:
         rpc_method_handlers = {
             {% for method in service.methods.values() %}
             '{{ method.name }}': grpc.{{ method.handler_name_string }}(
-                self._{{ to_snake_case(method.name) }},
+                apply_middlewares(self._{{ to_snake_case(method.name) }}, *self.middlewares),
                 request_deserializer={{ method.input_string }}.FromString,
                 response_serializer={{ method.output_string }}.SerializeToString,
             ),
