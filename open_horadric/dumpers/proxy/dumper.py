@@ -67,6 +67,9 @@ class ProxyDumper(Py3ServerDumper):
                 import_from="open_horadric_lib.proxy.middleware.base",
             )
         )
+        imports.add_import(
+            Import(type_=Import.Type.LIBRARY, import_name="Context", import_from="open_horadric_lib.base.context")
+        )
 
         for service in package.services.values():  # type: Py3Proxy
             imports.add_import(
@@ -90,14 +93,6 @@ class ProxyDumper(Py3ServerDumper):
             Import(type_=Import.Type.LIBRARY, import_name="ProxyApplication", import_from="open_horadric_lib.proxy.application")
         )
         imports.add_import(Import(type_=Import.Type.LIBRARY, import_name="CORS", import_from="flask_cors"))
-
-        imports.add_import(
-            Import(
-                type_=Import.Type.LIBRARY,
-                import_name="ProtocolConverterMiddleware",
-                import_from="open_horadric_lib.proxy.middleware.protocol_converter",
-            )
-        )
 
         services = {}
         for package in walk_packages(package=root):

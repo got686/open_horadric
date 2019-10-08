@@ -8,6 +8,7 @@ from typing import List
 import logging
 
 from flask import request as flask_request
+from open_horadric_lib.base.context import Context
 from open_horadric_lib.proxy.decorator.signature_types import signature_types
 from open_horadric_lib.proxy.middleware.base import apply_middlewares
 from open_horadric_lib.proxy.middleware.base import BaseProxyMiddleware
@@ -31,53 +32,58 @@ class TestServiceProxy(BaseProxy):
 
     def test_method(
             self,
-            request: TestMessage
+            request: TestMessage,
+            context: Context,
     ) -> TestMessage.TestNestedMessage:
         return self.client.test_method(request)
 
     def client_streaming(
             self,
-            request: TestMessage
+            request: TestMessage,
+            context: Context,
     ) -> TestMessage.TestNestedMessage:
         return self.client.client_streaming(request)
 
     def server_streaming(
             self,
-            request: TestMessage
+            request: TestMessage,
+            context: Context,
     ) -> TestMessage.TestNestedMessage:
         return self.client.server_streaming(request)
 
     def client_server_streaming(
             self,
-            request: TestMessage.TestNestedMessage
+            request: TestMessage.TestNestedMessage,
+            context: Context,
     ) -> TestMessage.TestNestedMessage:
         return self.client.client_server_streaming(request)
 
     def empty_method(
             self,
-            request: example_py3.google.protobuf.messages.Empty
+            request: example_py3.google.protobuf.messages.Empty,
+            context: Context,
     ) -> example_py3.google.protobuf.messages.Empty:
         return self.client.empty_method(request)
 
     @signature_types(TestMessage, TestMessage.TestNestedMessage)
-    def _test_method(self) -> TestMessage.TestNestedMessage:
-        return self.test_method(flask_request)
+    def _test_method(self, context: Context) -> TestMessage.TestNestedMessage:
+        return self.test_method(flask_request, context=context)
 
     @signature_types(TestMessage, TestMessage.TestNestedMessage)
-    def _client_streaming(self) -> TestMessage.TestNestedMessage:
-        return self.client_streaming(flask_request)
+    def _client_streaming(self, context: Context) -> TestMessage.TestNestedMessage:
+        return self.client_streaming(flask_request, context=context)
 
     @signature_types(TestMessage, TestMessage.TestNestedMessage)
-    def _server_streaming(self) -> TestMessage.TestNestedMessage:
-        return self.server_streaming(flask_request)
+    def _server_streaming(self, context: Context) -> TestMessage.TestNestedMessage:
+        return self.server_streaming(flask_request, context=context)
 
     @signature_types(TestMessage.TestNestedMessage, TestMessage.TestNestedMessage)
-    def _client_server_streaming(self) -> TestMessage.TestNestedMessage:
-        return self.client_server_streaming(flask_request)
+    def _client_server_streaming(self, context: Context) -> TestMessage.TestNestedMessage:
+        return self.client_server_streaming(flask_request, context=context)
 
     @signature_types(example_py3.google.protobuf.messages.Empty, example_py3.google.protobuf.messages.Empty)
-    def _empty_method(self) -> example_py3.google.protobuf.messages.Empty:
-        return self.empty_method(flask_request)
+    def _empty_method(self, context: Context) -> example_py3.google.protobuf.messages.Empty:
+        return self.empty_method(flask_request, context=context)
 
     def bind(self, app: flask.Flask):
         self.test_method = apply_middlewares(self.test_method, *self.middlewares)

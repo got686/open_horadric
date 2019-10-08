@@ -7,25 +7,22 @@ class {{ service.class_name }}(BaseProxy):
     """
     Proxy-converter to grpc for {{ service.full_name }}.
     """
-
     logger = logging.getLogger('{{ service.full_name }}')
-
-    def __init__(self, client: {{ service.name }}Client, middlewares: List[BaseProxyMiddleware]):
-        super().__init__(client, middlewares)
     {% if service.methods %}
         {% for method in service.methods.values() %}
 
     def {{ to_snake_case(method.name) -}}(
             self,
-            request: {{ method.input_string }}
+            request: {{ method.input_string }},
+            context: Context,
     ) -> {{ method.output_string }}:
         return self.client.{{ to_snake_case(method.name) }}(request)
         {% endfor %}
         {% for method in service.methods.values() %}
 
     @signature_types({{ method.input_string }}, {{ method.output_string }})
-    def _{{ to_snake_case(method.name) -}}(self) -> {{ method.output_string  }}:
-        return self.{{ to_snake_case(method.name) }}(flask_request)
+    def _{{ to_snake_case(method.name) -}}(self, context: Context) -> {{ method.output_string  }}:
+        return self.{{ to_snake_case(method.name) }}(flask_request, context=context)
         {% endfor %}
 
     def bind(self, app: flask.Flask):

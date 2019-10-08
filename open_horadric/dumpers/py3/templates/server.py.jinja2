@@ -8,12 +8,12 @@ class {{ service.class_name }}(BaseServerInterface):
         {% if not loop.first %}
 
         {% endif %}
-    def _{{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: RpcContext) -> {{ method.output_type_string }}:
+    def _{{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: Context) -> {{ method.output_type_string }}:
         return self.{{ to_snake_case(method.name) }}(request=request, context=context)
     {% endfor %}
     {% for method in service.methods.values() %}
 
-    def {{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: RpcContext) -> {{ method.output_type_string }}:
+    def {{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: Context) -> {{ method.output_type_string }}:
         raise NotImplementedError
     {% endfor %}
 
@@ -21,7 +21,7 @@ class {{ service.class_name }}(BaseServerInterface):
         rpc_method_handlers = {
             {% for method in service.methods.values() %}
             '{{ method.name }}': grpc.{{ method.handler_name_string }}(
-                apply_middlewares(self._{{ to_snake_case(method.name) }}, *self.middlewares),
+                self._wrap_method(self._{{ to_snake_case(method.name) }}),
                 request_deserializer={{ method.input_string }}.FromString,
                 response_serializer={{ method.output_string }}.SerializeToString,
             ),
