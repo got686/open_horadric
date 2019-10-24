@@ -7,7 +7,9 @@ cors = CORS(app, resources={r"/*": {"origins": "{{cors}}"}})
 channel = grpc.insecure_channel('localhost:50051')
 
 {% for service in services.values() %}
-{{ service.full_class_name }}(client={{ service.client.full_class_name }}(channel=channel)).bind(app=app)
+{{ service.full_class_name }}(
+    client={{ service.client.full_class_name }}(channel=channel)
+).bind(app=app)
 {% endfor %}
 
 

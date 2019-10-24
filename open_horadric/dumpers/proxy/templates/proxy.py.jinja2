@@ -21,8 +21,13 @@ class {{ service.class_name }}(BaseProxy):
         {% for method in service.methods.values() %}
 
     @signature_types({{ method.input_string }}, {{ method.output_string }})
-    def _{{ to_snake_case(method.name) -}}(self, context: Context) -> {{ method.output_string  }}:
-        return self.{{ to_snake_case(method.name) }}(flask_request, context=context)
+    def _{{ to_snake_case(method.name) -}}(self, request: FlaskRequest, context: Context) -> {{ method.output_string  }}:
+        try:
+            request = ProtocolAdapter.get_request(request=request, context=context)
+            response = self.{{ to_snake_case(method.name) }}(request=request, context=context)
+            return ProtocolAdapter.make_response(response=response, context=context)
+        except Exception as exception:
+            return ErrorProcessor.process_error(exception=exception, context=context)
         {% endfor %}
 
     def bind(self, app: flask.Flask):
@@ -30,11 +35,9 @@ class {{ service.class_name }}(BaseProxy):
             {% if not loop.first %}
 
             {% endif %}
-        self.{{ to_snake_case(method.name) }} = apply_middlewares(self.{{ to_snake_case(method.name) }}, *self.middlewares)
-
         app.add_url_rule(
             rule='/{{ service.no_root_name }}/{{ method.name }}',
-            view_func=self._{{ to_snake_case(method.name) }},
+            view_func=apply_middlewares(self._{{ to_snake_case(method.name) }}, *self.middlewares),
             methods=('POST', 'GET'),
             endpoint='{{ service.no_root_name }}/{{ method.name }}',
         )

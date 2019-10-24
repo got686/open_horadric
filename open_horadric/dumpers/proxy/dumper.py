@@ -70,6 +70,19 @@ class ProxyDumper(Py3ServerDumper):
         imports.add_import(
             Import(type_=Import.Type.LIBRARY, import_name="Context", import_from="open_horadric_lib.base.context")
         )
+        imports.add_import(
+            Import(
+                type_=Import.Type.LIBRARY, import_name="ProtocolAdapter", import_from="open_horadric_lib.proxy.protocol_adapter"
+            )
+        )
+        imports.add_import(
+            Import(
+                type_=Import.Type.LIBRARY, import_name="ErrorProcessor", import_from="open_horadric_lib.proxy.error_processor"
+            )
+        )
+        imports.add_import(
+            Import(type_=Import.Type.LIBRARY, import_name="Request", import_from="flask.wrappers", import_as="FlaskRequest")
+        )
 
         for service in package.services.values():  # type: Py3Proxy
             imports.add_import(

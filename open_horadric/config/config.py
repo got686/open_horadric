@@ -16,6 +16,8 @@ class Config(metaclass=SingletonMeta):
         default_config_path = os.path.join(CURRENT_DIR, "default.yaml")
         with open(default_config_path) as f:
             config = yaml.load(f, Loader=yaml.FullLoader)
+            if config is None:
+                raise ValueError("Empty config, there is must be at least `project_name`")
 
         config_path = os.environ.get("CONFIG", "open_horadric_config.yaml")
         with open(config_path) as f:
