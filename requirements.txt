@@ -1,4 +1,4 @@
-git+https://github.com/got686/open_horadric_lib@7383c54811cb8e3bfdbebde4ca502f946ff40583
+git+https://github.com/got686/open_horadric_lib@56c561b3378bce67f7720045cefa777a711b8049
 
 protobuf>=3.10.0
 grpcio>=1.24.1
