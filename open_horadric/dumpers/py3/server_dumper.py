@@ -38,6 +38,13 @@ class Py3ServerDumper(Py3ClientDumper):
             )
         )
         imports.add_import(
+            Import(
+                type_=Import.Type.LIBRARY,
+                import_name="apply_middlewares",
+                import_from="open_horadric_lib.server.middleware.base",
+            )
+        )
+        imports.add_import(
             Import(type_=Import.Type.LIBRARY, import_name="Context", import_from="open_horadric_lib.base.context")
         )
 
