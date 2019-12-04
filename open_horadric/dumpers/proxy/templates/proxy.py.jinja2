@@ -27,7 +27,7 @@ class {{ service.class_name }}(BaseProxy):
             response = self.{{ to_snake_case(method.name) }}(request=request, context=context)
             return ProtocolAdapter.make_response(response=response, context=context)
         except Exception as exception:
-            return self.error_processor.process(exception=exception, context=context)
+            return self.error_processor.process_error(exception=exception, context=context)
         {% endfor %}
 
     def bind(self, app: flask.Flask):
