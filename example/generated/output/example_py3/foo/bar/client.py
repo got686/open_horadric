@@ -29,37 +29,47 @@ class TestServiceClient(BaseClient):
 
     logger = logging.getLogger('example_py3.foo.bar.client.TestService')
 
-    def __init__(self, channel, credentials=None):
-        super().__init__(channel=channel, credentials=credentials)
+    def __init__(self, channel, middlewares=None, credentials=None):
+        super().__init__(channel=channel, middlewares=middlewares, credentials=credentials)
 
-        self._test_method = self.channel.unary_unary(
-            '/foo.bar.TestService/TestMethod',
-            request_serializer=TestMessage.SerializeToString,
-            response_deserializer=TestMessage.TestNestedMessage.FromString,
+        self._test_method = self._wrap_method(
+            self.channel.unary_unary(
+                '/foo.bar.TestService/TestMethod',
+                request_serializer=TestMessage.SerializeToString,
+                response_deserializer=TestMessage.TestNestedMessage.FromString,
+            )
         )
 
-        self._client_streaming = self.channel.stream_unary(
-            '/foo.bar.TestService/ClientStreaming',
-            request_serializer=TestMessage.SerializeToString,
-            response_deserializer=TestMessage.TestNestedMessage.FromString,
+        self._client_streaming = self._wrap_method(
+            self.channel.stream_unary(
+                '/foo.bar.TestService/ClientStreaming',
+                request_serializer=TestMessage.SerializeToString,
+                response_deserializer=TestMessage.TestNestedMessage.FromString,
+            )
         )
 
-        self._server_streaming = self.channel.unary_stream(
-            '/foo.bar.TestService/ServerStreaming',
-            request_serializer=TestMessage.SerializeToString,
-            response_deserializer=TestMessage.TestNestedMessage.FromString,
+        self._server_streaming = self._wrap_method(
+            self.channel.unary_stream(
+                '/foo.bar.TestService/ServerStreaming',
+                request_serializer=TestMessage.SerializeToString,
+                response_deserializer=TestMessage.TestNestedMessage.FromString,
+            )
         )
 
-        self._client_server_streaming = self.channel.stream_stream(
-            '/foo.bar.TestService/ClientServerStreaming',
-            request_serializer=TestMessage.TestNestedMessage.SerializeToString,
-            response_deserializer=TestMessage.TestNestedMessage.FromString,
+        self._client_server_streaming = self._wrap_method(
+            self.channel.stream_stream(
+                '/foo.bar.TestService/ClientServerStreaming',
+                request_serializer=TestMessage.TestNestedMessage.SerializeToString,
+                response_deserializer=TestMessage.TestNestedMessage.FromString,
+            )
         )
 
-        self._empty_method = self.channel.unary_unary(
-            '/foo.bar.TestService/EmptyMethod',
-            request_serializer=example_py3.google.protobuf.messages.Empty.SerializeToString,
-            response_deserializer=example_py3.google.protobuf.messages.Empty.FromString,
+        self._empty_method = self._wrap_method(
+            self.channel.unary_unary(
+                '/foo.bar.TestService/EmptyMethod',
+                request_serializer=example_py3.google.protobuf.messages.Empty.SerializeToString,
+                response_deserializer=example_py3.google.protobuf.messages.Empty.FromString,
+            )
         )
 
     def __repr__(self):

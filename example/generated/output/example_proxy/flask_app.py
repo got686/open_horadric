@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from flask_cors import CORS
 from open_horadric_lib.proxy.application import ProxyApplication
-from open_horadric_lib.proxy.middleware.protocol_converter import ProtocolConverterMiddleware
 import grpc
 
 import example_proxy.foo.bar.proxy
@@ -17,9 +16,9 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 channel = grpc.insecure_channel('localhost:50051')
 
 example_proxy.foo.bar.proxy.TestServiceProxy(
-    client=example_py3.foo.bar.client.TestServiceClient(channel=channel),
-    middlewares=[ProtocolConverterMiddleware()]
+    client=example_py3.foo.bar.client.TestServiceClient(channel=channel)
 ).bind(app=app)
+
 
 def main(host="127.0.0.1", port=8080):
     app.run(host=host, port=port)
