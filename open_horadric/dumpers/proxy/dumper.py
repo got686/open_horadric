@@ -72,11 +72,6 @@ class ProxyDumper(Py3ServerDumper):
         )
         imports.add_import(
             Import(
-                type_=Import.Type.LIBRARY, import_name="ProtocolAdapter", import_from="open_horadric_lib.proxy.protocol_adapter"
-            )
-        )
-        imports.add_import(
-            Import(
                 type_=Import.Type.LIBRARY, import_name="ErrorProcessor", import_from="open_horadric_lib.proxy.error_processor"
             )
         )
