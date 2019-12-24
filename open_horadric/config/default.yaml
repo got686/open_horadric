@@ -20,3 +20,5 @@ pipelines:
     root_suffix: model
   typescript:
     root_suffix: ts
+  open_api:
+    root_suffix: open_api

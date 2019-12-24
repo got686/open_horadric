@@ -14,6 +14,7 @@ from google.protobuf.compiler import plugin_pb2
 
 from open_horadric.config.config import Config
 from open_horadric.parsers.proto3.source import FileSource
+from open_horadric.pipelines.base_pipelines.open_api.pipeline import open_api_pipeline
 from open_horadric.pipelines.base_pipelines.py3.pipeline import py3_pipeline
 from open_horadric.pipelines.base_pipelines.typescript.pipeline import typescript_pipeline
 
@@ -31,7 +32,7 @@ def generate_response(request):
     response = plugin_pb2.CodeGeneratorResponse()
     sources = [FileSource.from_descriptor(file_descriptor) for file_descriptor in request.proto_file]
 
-    for pipeline in (py3_pipeline, typescript_pipeline):
+    for pipeline in (py3_pipeline, typescript_pipeline, open_api_pipeline):
         for path, source in pipeline.run(sources=sources).items():
             f = response.file.add()
             f.name = path

@@ -1,0 +1,167 @@
+components:
+  schemas:
+    example_open_api.foo.bar.TestEnum:
+      enum:
+      - DEFAULT
+      type: string
+    example_open_api.foo.bar.TestMessage:
+      properties:
+        bool:
+          default: false
+          type: boolean
+        bytes:
+          default: ''
+          type: string
+        double:
+          default: 0
+          format: double
+          type: number
+        fixed32:
+          default: 0
+          format: int32
+          type: integer
+        fixed64:
+          default: 0
+          format: int64
+          type: integer
+        float:
+          default: 0
+          format: double
+          type: number
+        int32:
+          default: 0
+          format: int32
+          type: integer
+        int64:
+          default: 0
+          format: int64
+          type: integer
+        pbt_message_map:
+          $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+        sfixed32:
+          default: 0
+          format: int32
+          type: integer
+        sfixed64:
+          default: 0
+          format: int64
+          type: integer
+        sint32:
+          default: 0
+          format: int32
+          type: integer
+        sint64:
+          default: 0
+          format: int64
+          type: integer
+        string:
+          default: ''
+          type: string
+        test_nested_enum:
+          $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedEnum'
+        test_nested_message:
+          $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+        uint32:
+          default: 0
+          format: int32
+          minimum: 0
+          type: integer
+        uint64:
+          default: 0
+          format: int64
+          minimum: 0
+          type: integer
+      type: object
+    example_open_api.foo.bar.TestMessage.TestNestedEnum:
+      enum:
+      - DEFAULT
+      type: string
+    example_open_api.foo.bar.TestMessage.TestNestedMessage:
+      properties:
+        bar:
+          default: ''
+          type: string
+      type: object
+    example_open_api.google.protobuf.Empty:
+      properties: {}
+      type: object
+info:
+  title: Some title
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /foo.bar/ClientServerStreaming:
+    post:
+      operationId: example_open_api.foo.bar.TestService.ClientServerStreaming
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          description: Some description
+  /foo.bar/ClientStreaming:
+    post:
+      operationId: example_open_api.foo.bar.TestService.ClientStreaming
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          description: Some description
+  /foo.bar/EmptyMethod:
+    post:
+      operationId: example_open_api.foo.bar.TestService.EmptyMethod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/example_open_api.google.protobuf.Empty'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/example_open_api.google.protobuf.Empty'
+          description: Some description
+  /foo.bar/ServerStreaming:
+    post:
+      operationId: example_open_api.foo.bar.TestService.ServerStreaming
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          description: Some description
+  /foo.bar/TestMethod:
+    post:
+      operationId: example_open_api.foo.bar.TestService.TestMethod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          description: Some description

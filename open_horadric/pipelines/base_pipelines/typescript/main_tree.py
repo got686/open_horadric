@@ -1,8 +1,4 @@
-# coding: utf-8
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import unicode_literals
+from __future__ import annotations
 
 from open_horadric.config.config import Config
 from open_horadric.converters.root_folder.converter import RootFolderConverter
