@@ -37,7 +37,9 @@ components:
           format: int64
           type: integer
         pbt_message_map:
-          $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          additionalProperties:
+            $ref: '#/components/schemas/example_open_api.foo.bar.TestMessage.TestNestedMessage'
+          type: object
         sfixed32:
           default: 0
           format: int32

@@ -77,7 +77,13 @@ class OpenApiDumper(BaseDumper):
             properties = {}
             for field in message.fields.values():
                 if field.type in {Message.Field.Type.MESSAGE, Message.Field.Type.ENUM}:
-                    field_description = {"$ref": f"#/components/schemas/{field.type_obj.full_name}"}
+                    ref = f"#/components/schemas/{field.type_obj.full_name}"
+                    if field.container_type == field.ContainerType.LIST:
+                        field_description = {"type": "array", "items": ref}
+                    elif field.container_type == field.ContainerType.MAP:
+                        field_description = {"type": "object", "additionalProperties": {"$ref": ref}}
+                    else:
+                        field_description = {"$ref": ref}
                 else:
                     field_description = {"type": FIELDS_TYPES_MAP[field.type]}  # FIXME
                     if field.type == Message.Field.Type.BOOL:
