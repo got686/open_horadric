@@ -107,10 +107,10 @@ export class TestMessage implements interfaces.ITestMessage {
         return new TestMessage(
             data.double,
             data.float,
-            data.int64,
-            data.uint64,
+            Number(data.int64),
+            Number(data.uint64),
             data.int32,
-            data.fixed64,
+            Number(data.fixed64),
             data.fixed32,
             data.bool,
             data.string,
@@ -119,9 +119,9 @@ export class TestMessage implements interfaces.ITestMessage {
             data.uint32,
             data.testNestedEnum !== undefined ? TestMessage__TestNestedEnum[data.testNestedEnum] : undefined,
             data.sfixed32,
-            data.sfixed64,
+            Number(data.sfixed64),
             data.sint32,
-            data.sint64,
+            Number(data.sint64),
             pbtMessageMap,
         )
     }

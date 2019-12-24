@@ -53,8 +53,10 @@ class TypescriptMessage(TypescriptMessageInterface):
                 return not_base_type_template.format(
                     "{}.FromData(data.{})".format(self._get_message_type_name(), self.name_sting)
                 )
+            elif self.type in {self.Type.UINT64, self.Type.FIXED64, self.Type.INT64, self.Type.SFIXED64, self.Type.SINT64}:
+                return f"Number(data.{self.name_sting})"
 
-            return "data.{}".format(self.name_sting)
+            return f"data.{self.name_sting}"
 
         def _get_enum_type_name(self):
             if in_same_package(self, self.type_obj):

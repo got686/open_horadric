@@ -50,8 +50,7 @@ def main():
     logger.info("%-12s v%s (%s)", "protoc", exists_protoc_version, config.protoc_path)
 
     if config.protoc_version and exists_protoc_version != config.protoc_version:
-        logger.error("libprotoc %s required", config.protoc_version)
-        sys.exit(1)
+        logger.warning("libprotoc %s required", config.protoc_version)
 
     cmd = create_cmd(protoc_path=config.protoc_path, proto_dir=proto_dir, output_dir=output_dir)
     logger.info("Run compile command: %s", " ".join(cmd))
