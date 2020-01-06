@@ -23,7 +23,7 @@ class {{ service.class_name }}(BaseProxy):
     @signature_types({{ method.input_string }}, {{ method.output_string }})
     def _{{ to_snake_case(method.name) -}}(self, request: FlaskRequest, context: Context) -> {{ method.output_string  }}:
         try:
-            request = self.protocol_parser.get_request(request=request, context=context)
+            request = self.protocol_adapter.get_request(request=request, context=context)
             response = self.{{ to_snake_case(method.name) }}(request=request, context=context)
             return self.protocol_adapter.make_response(response=response, context=context)
         except Exception as exception:
