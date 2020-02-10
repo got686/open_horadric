@@ -1,0 +1,3 @@
+project_name: example
+output_dir: example/generated
+proto_dir: example/proto

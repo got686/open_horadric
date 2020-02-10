@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from open_horadric.config import Config
+from open_horadric.config.config import Config
 from open_horadric.converters.package_rename_converter.converter import PackageRenameConverter
 from open_horadric.converters.root_folder.converter import RootFolderConverter
 from open_horadric.converters.type_cast.converter import TypeCastConverter

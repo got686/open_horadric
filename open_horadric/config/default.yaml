@@ -3,6 +3,10 @@ protoc_version: 3.9.1
 proto_dir: proto
 output_dir: generated
 project_name: default
+debug: False
+version: 0.0.1dev
+license: MIT
+run_after: []
 
 pipelines:
   py3:

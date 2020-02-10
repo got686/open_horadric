@@ -46,7 +46,7 @@ class BaseJinja2Dumper(BaseDumper, ABC):
 
     @classmethod
     def get_own_templates(cls):
-        return os.path.join(os.path.dirname(os.path.abspath(inspect.getfile(cls))), "templates")
+        return os.path.join(os.path.dirname(os.path.abspath(inspect.getsourcefile(cls))), "templates")
 
     @classproperty
     def templates(self):

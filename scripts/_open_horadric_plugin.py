@@ -12,6 +12,7 @@ import sys
 
 from google.protobuf.compiler import plugin_pb2
 
+from open_horadric.config.config import Config
 from open_horadric.parsers.proto3.source import FileSource
 from open_horadric.pipelines.base_pipelines.py3.pipeline import py3_pipeline
 from open_horadric.pipelines.base_pipelines.typescript.pipeline import typescript_pipeline
@@ -40,11 +41,12 @@ def generate_response(request):
 
 
 def run_plugin(func):
-    data = sys.stdin.buffer.read()
-    with open("debug_data_dump", "wb+") as f:
-        f.write(data)
+    config = Config()
 
-    # config = get_config(use_tmp=True)
+    data = sys.stdin.buffer.read()
+    if config.debug:
+        with open("debug_data_dump", "wb+") as f:
+            f.write(data)
 
     plugin_request = plugin_pb2.CodeGeneratorRequest()
     plugin_request.ParseFromString(data)

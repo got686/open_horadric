@@ -2,7 +2,7 @@ import sys
 
 from google.protobuf.compiler import plugin_pb2
 
-from open_horadric.plugin import generate_response
+from scripts._open_horadric_plugin import generate_response
 
 
 def main():

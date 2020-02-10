@@ -1,0 +1,8 @@
+include MANIFEST.in
+include open_horadric/config/default.yaml
+include open_horadric/dumpers/proxy/templates/*
+include open_horadric/dumpers/py3/templates/*
+include open_horadric/dumpers/typescript/templates/*
+include open_horadric/dumpers/proxy/static/*
+include open_horadric/dumpers/py3/static/*
+include open_horadric/dumpers/typescript/static/*

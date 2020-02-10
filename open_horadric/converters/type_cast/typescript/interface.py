@@ -44,6 +44,9 @@ class TypescriptMessageInterface(Message):
 
         @property
         def data_type_name_string(self) -> str:
+            if self.type in {self.Type.SINT64, self.Type.SFIXED64, self.Type.INT64, self.Type.FIXED64, self.Type.UINT64}:
+                return "string"
+
             return self.type_name_string
 
         @property

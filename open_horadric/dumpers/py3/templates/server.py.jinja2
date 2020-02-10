@@ -3,30 +3,37 @@
 {% macro render_service(service) %}
 
 
-class {{ service.class_name }}:
+class {{ service.class_name }}(BaseServerInterface):
     {% for method in service.methods.values() %}
         {% if not loop.first %}
 
         {% endif %}
-    def _{{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: RpcContext) -> {{ method.output_type_string }}:
+    def _{{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: Context) -> {{ method.output_type_string }}:
+        context.service_name = "{{ service.name }}"
+        context.method_name = "{{ method.name }}"
         return self.{{ to_snake_case(method.name) }}(request=request, context=context)
     {% endfor %}
     {% for method in service.methods.values() %}
 
-    def {{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: RpcContext) -> {{ method.output_type_string }}:
+    def {{ to_snake_case(method.name) }}(self, request: {{ method.input_type_string }}, context: Context) -> {{ method.output_type_string }}:
         raise NotImplementedError
     {% endfor %}
 
     def bind(self, server):
+        {% for method in service.methods.values() %}
+        self.{{ to_snake_case(method.name) }} = apply_middlewares(self.{{ to_snake_case(method.name) }}, *self.middlewares)
+        {% endfor %}
+
         rpc_method_handlers = {
             {% for method in service.methods.values() %}
             '{{ method.name }}': grpc.{{ method.handler_name_string }}(
-                self._{{ to_snake_case(method.name) }},
+                self._wrap_method(self._{{ to_snake_case(method.name) }}),
                 request_deserializer={{ method.input_string }}.FromString,
                 response_serializer={{ method.output_string }}.SerializeToString,
             ),
             {% endfor %}
         }
+
         generic_handler = grpc.method_handlers_generic_handler('{{ service.grpc_path_string }}', rpc_method_handlers)
         server.add_generic_rpc_handlers((generic_handler,))
 {% endmacro %}

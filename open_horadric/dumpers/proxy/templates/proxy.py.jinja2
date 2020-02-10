@@ -7,25 +7,27 @@ class {{ service.class_name }}(BaseProxy):
     """
     Proxy-converter to grpc for {{ service.full_name }}.
     """
-
     logger = logging.getLogger('{{ service.full_name }}')
-
-    def __init__(self, client: {{ service.name }}Client, middlewares: List[BaseProxyMiddleware]):
-        super().__init__(client, middlewares)
     {% if service.methods %}
         {% for method in service.methods.values() %}
 
     def {{ to_snake_case(method.name) -}}(
             self,
-            request: {{ method.input_string }}
+            request: {{ method.input_string }},
+            context: Context,
     ) -> {{ method.output_string }}:
         return self.client.{{ to_snake_case(method.name) }}(request)
         {% endfor %}
         {% for method in service.methods.values() %}
 
     @signature_types({{ method.input_string }}, {{ method.output_string }})
-    def _{{ to_snake_case(method.name) -}}(self) -> {{ method.output_string  }}:
-        return self.{{ to_snake_case(method.name) }}(flask_request)
+    def _{{ to_snake_case(method.name) -}}(self, request: FlaskRequest, context: Context) -> {{ method.output_string  }}:
+        try:
+            request = self.protocol_adapter.get_request(request=request, context=context)
+            response = self.{{ to_snake_case(method.name) }}(request=request, context=context)
+            return self.protocol_adapter.make_response(response=response, context=context)
+        except Exception as exception:
+            return self.error_processor.process_error(exception=exception, context=context)
         {% endfor %}
 
     def bind(self, app: flask.Flask):
@@ -33,11 +35,9 @@ class {{ service.class_name }}(BaseProxy):
             {% if not loop.first %}
 
             {% endif %}
-        self.{{ to_snake_case(method.name) }} = apply_middlewares(self.{{ to_snake_case(method.name) }}, *self.middlewares)
-
         app.add_url_rule(
             rule='/{{ service.no_root_name }}/{{ method.name }}',
-            view_func=self._{{ to_snake_case(method.name) }},
+            view_func=apply_middlewares(self._{{ to_snake_case(method.name) }}, *self.middlewares),
             methods=('POST', 'GET'),
             endpoint='{{ service.no_root_name }}/{{ method.name }}',
         )

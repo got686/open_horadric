@@ -10,14 +10,16 @@ class {{ service.class_name }}(BaseClient):
 
     logger = logging.getLogger('{{ service.full_name }}')
 
-    def __init__(self, channel, credentials=None):
-        super().__init__(channel=channel, credentials=credentials)
+    def __init__(self, channel, middlewares=None, credentials=None):
+        super().__init__(channel=channel, middlewares=middlewares, credentials=credentials)
         {% for method in service.methods.values() %}
 
-        self._{{ to_snake_case(method.name) }} = self.channel.{{ method.handler_name_string }}(
-            '/{{ service.grpc_path_string }}/{{ method.name }}',
-            request_serializer={{ method.input_string }}.SerializeToString,
-            response_deserializer={{ method.output_string }}.FromString,
+        self._{{ to_snake_case(method.name) }} = self._wrap_method(
+            self.channel.{{ method.handler_name_string }}(
+                '/{{ service.grpc_path_string }}/{{ method.name }}',
+                request_serializer={{ method.input_string }}.SerializeToString,
+                response_deserializer={{ method.output_string }}.FromString,
+            )
         )
         {% endfor %}
 

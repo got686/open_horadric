@@ -36,7 +36,7 @@ class Py3ClientDumper(BaseJinja2Dumper):
         imports.add_import(Import(type_=Import.Type.CORE, import_name="List", import_from="typing"))
         imports.add_import(Import(type_=Import.Type.LIBRARY, import_name="google.protobuf.empty_pb2"))
         imports.add_import(
-            Import(type_=Import.Type.LIBRARY, import_name="BaseClient", import_from="horadric_lib.client.client")
+            Import(type_=Import.Type.LIBRARY, import_name="BaseClient", import_from="open_horadric_lib.client.client")
         )
 
         self.add_services_imports(imports=imports, package=package)
